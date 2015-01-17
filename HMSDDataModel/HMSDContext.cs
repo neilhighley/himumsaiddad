@@ -1,46 +1,42 @@
+﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using HMSDDataModel.Models;
 
-namespace WebApplication1
+namespace HMSDDataModel
 {
-    using System;
-    using System.Data.Entity;
-    using System.Linq;
-
-    public class HMSDDataModel : DbContext
+    public class HMSDContext : DbContext
     {
-        // Your context has been configured to use a 'HMSDDataModel' connection string from your application's 
+        // Your context has been configured to use a 'HMSDContext' connection string from your application's 
         // configuration file (App.config or Web.config). By default, this connection string targets the 
-        // 'WebApplication1.HMSDDataModel' database on your LocalDb instance. 
+        // 'WebApplication1.HMSDContext' database on your LocalDb instance. 
         // 
-        // If you wish to target a different database and/or database provider, modify the 'HMSDDataModel' 
+        // If you wish to target a different database and/or database provider, modify the 'HMSDContext' 
         // connection string in the application configuration file.
-        public HMSDDataModel()
-            : base("name=HMSDDataModel")
+        public HMSDContext()
+            : base("name=HMSDData")
         {
-            Database.SetInitializer<HMSDDataModel>(new HMSDDataModelInitialiser());
+            Database.SetInitializer<HMSDContext>(new HMSDContextInitialiser());
             Configuration.ProxyCreationEnabled = false;
         }
 
 
-         public virtual DbSet<VoucherCode> VoucherCodes { get; set; }
+        public virtual DbSet<VoucherCode> VoucherCodes { get; set; }
     }
-    /// <summary>
-    /// The vouchercode model for the database entity
-    /// </summary>
-    public class VoucherCode
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public Guid Identifier { get; set; }
-        public bool Claimed { get; set; }
-    }
-
+   
     /// <summary>
     /// Create a subset to initially populate the database
     /// </summary>
-    public class HMSDDataModelInitialiser : CreateDatabaseIfNotExists<HMSDDataModel>
+    public class HMSDContextInitialiser : CreateDatabaseIfNotExists<HMSDContext>
     {
-        protected override void Seed(HMSDDataModel context)
+        /// <summary>
+        /// Initialise the Database with some content
+        /// </summary>
+        /// <param name="context"></param>
+        protected override void Seed(HMSDContext context)
         {
             var vcs = new List<VoucherCode>
             {
@@ -66,7 +62,7 @@ namespace WebApplication1
                     Name = "Voucher C"
                 }
             };
-            vcs.ForEach(vc=>context.VoucherCodes.Add(vc));
+            vcs.ForEach(vc => context.VoucherCodes.Add(vc));
         }
     }
 }
